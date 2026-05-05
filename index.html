@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>性别与消费研究</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="intro">
+        <div class="intro-copy">
+          <span class="paper-code">DATA MINI LAB</span>
+          <h1>平台消费小实验</h1>
+          <p>从小红书、抖音、B站到淘宝京东，用几个具体平台场景看看你的选择和样本分布有什么不同。</p>
+        </div>
+        <div class="mini-board" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+          <strong>样本<br />对比</strong>
+        </div>
+      </section>
+
+      <section class="card" id="quizPage" aria-label="互动选择">
+        <div class="topline">
+          <span id="stepText">第 1 / 3 题</span>
+          <span id="topicText">消费频率</span>
+        </div>
+        <div class="progress-strip" aria-hidden="true"><span id="progressBar"></span></div>
+
+        <div class="gender-select" aria-label="选择你的性别">
+          <button type="button" data-gender="female">女性</button>
+          <button type="button" data-gender="male">男性</button>
+        </div>
+
+        <h2 id="questionText"></h2>
+        <div class="options" id="options"></div>
+
+        <div class="result" id="result" hidden></div>
+        <div class="bars" id="bars"></div>
+
+        <div class="actions">
+          <button type="button" id="resetBtn">重新开始</button>
+          <button type="button" id="nextBtn">下一题</button>
+        </div>
+      </section>
+
+      <section class="result-page" id="resultPage" hidden aria-label="统计解读">
+        <div class="card">
+          <div class="topline">
+            <span>答题完成</span>
+            <span id="finalGender">样本比较</span>
+          </div>
+          <div class="complete-mark">你的样本比较已生成</div>
+          <h2>你的选择已经进入统计实验室</h2>
+          <div class="summary-list" id="summaryList"></div>
+          <div class="actions">
+            <button type="button" id="backBtn">返回修改</button>
+            <button type="button" id="restartBtn">重新开始</button>
+          </div>
+        </div>
+
+        <section class="stat-lab" aria-label="互动统计实验室">
+          <div class="lab-title">
+            <span>互动统计实验室</span>
+            <h2>一关一关看懂统计结果</h2>
+            <p>先看你的选择像哪类样本，再看百分比、显著性和回归。不要急着下结论，统计学会把“看起来不同”和“真的比较稳定”分开。</p>
+            <button type="button" id="replayLabBtn">重新播放实验</button>
+          </div>
+
+          <nav class="lab-nav" aria-label="统计实验室章节">
+            <button type="button" class="active" data-lab-target="profile">1 综合回应</button>
+            <button type="button" data-lab-target="distribution">2 样本分布</button>
+            <button type="button" data-lab-target="test">3 差异检验</button>
+            <button type="button" data-lab-target="regression">4 回归赛道</button>
+          </nav>
+
+          <div class="lab-stage">
+            <article class="profile-panel lab-slide active" data-lab-panel="profile">
+              <span>第 1 关 · 先给你的选择贴个标签</span>
+              <h3 id="profileTitle"></h3>
+              <p id="profileText"></p>
+              <div class="profile-tags" id="profileTags"></div>
+              <button type="button" class="lab-next" data-lab-next="distribution">去看样本分布</button>
+            </article>
+
+            <article class="lab-panel lab-slide" data-lab-panel="distribution">
+              <div class="lab-panel-head">
+                <span>第 2 关 · 样本分布</span>
+                <strong>找找你在哪</strong>
+              </div>
+              <div class="distribution-list" id="distributionList"></div>
+              <button type="button" class="lab-next" data-lab-next="test">继续做差异检验</button>
+            </article>
+
+            <article class="lab-panel lab-slide" data-lab-panel="test">
+              <div class="lab-panel-head">
+                <span>第 3 关 · 差异检验机</span>
+                <strong>p 值扫描</strong>
+              </div>
+              <div class="test-list" id="testList"></div>
+              <button type="button" class="lab-next" data-lab-next="regression">进入回归赛道</button>
+            </article>
+
+            <article class="lab-panel regression-panel lab-slide" data-lab-panel="regression">
+              <div class="lab-panel-head">
+                <span>第 4 关 · 回归赛道</span>
+                <strong>控制变量后</strong>
+              </div>
+              <div class="regression-list" id="regressionList"></div>
+              <button type="button" class="lab-next" data-lab-next="profile">回到综合回应</button>
+            </article>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

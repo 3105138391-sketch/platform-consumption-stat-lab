@@ -169,8 +169,8 @@ button {
 .gender-select {
   position: relative;
   z-index: 1;
-  gap: 10px;
-  margin-top: 24px;
+  gap: 14px;
+  margin-top: 28px;
 }
 
 .gender-select button,
@@ -185,9 +185,24 @@ button {
   cursor: pointer;
 }
 
+.gender-select button {
+  min-width: 128px;
+  min-height: 58px;
+  padding: 0 26px;
+  font-size: 18px;
+  font-weight: 850;
+  box-shadow: 4px 4px 0 rgba(36, 31, 26, 0.14);
+  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
+}
+
+.gender-select button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 rgba(36, 31, 26, 0.2);
+}
+
 .gender-select button.active {
   background: var(--mint);
-  box-shadow: 4px 4px 0 var(--teal);
+  box-shadow: 6px 6px 0 var(--teal);
   transform: translate(-2px, -2px);
 }
 
@@ -1000,6 +1015,11 @@ h2 {
   .actions {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .gender-select button {
+    width: 100%;
+    min-height: 60px;
   }
 
   .summary-list {

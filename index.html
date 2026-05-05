@@ -52,8 +52,8 @@
             <span>答题完成</span>
             <span id="finalGender">样本比较</span>
           </div>
-          <div class="complete-mark">你的样本比较已生成</div>
-          <h2>你的选择已经进入统计实验室</h2>
+          <div class="complete-mark">你的选择已进入统计闯关</div>
+          <h2>从百分比到统计解释</h2>
           <div class="summary-list" id="summaryList"></div>
           <div class="actions">
             <button type="button" id="backBtn">返回修改</button>
@@ -61,55 +61,59 @@
           </div>
         </div>
 
-        <section class="stat-lab" aria-label="互动统计实验室">
+        <section class="stat-lab" aria-label="统计闯关">
           <div class="lab-title">
-            <span>互动统计实验室</span>
-            <h2>一关一关看懂统计结果</h2>
-            <p>先看你的选择像哪类样本，再看百分比、显著性和回归。不要急着下结论，统计学会把“看起来不同”和“真的比较稳定”分开。</p>
-            <button type="button" id="replayLabBtn">重新播放实验</button>
+            <span>STAT QUEST</span>
+            <h2>统计闯关：从百分比到解释</h2>
+            <p>每一关只解决一个问题：样本怎么分布？差异靠谱吗？排除干扰后还成立吗？最后再把你的选择放回样本里看。</p>
+            <button type="button" id="replayLabBtn">重新播放</button>
           </div>
 
-          <nav class="lab-nav" aria-label="统计实验室章节">
-            <button type="button" class="active" data-lab-target="profile">1 综合回应</button>
-            <button type="button" data-lab-target="distribution">2 样本分布</button>
-            <button type="button" data-lab-target="test">3 差异检验</button>
-            <button type="button" data-lab-target="regression">4 回归赛道</button>
+          <nav class="lab-nav" aria-label="统计闯关章节">
+            <button type="button" class="active" data-lab-target="distribution">1 描述统计</button>
+            <button type="button" data-lab-target="test">2 卡方检验</button>
+            <button type="button" data-lab-target="regression">3 回归分析</button>
+            <button type="button" data-lab-target="profile">4 综合回应</button>
           </nav>
 
           <div class="lab-stage">
-            <article class="profile-panel lab-slide active" data-lab-panel="profile">
-              <span>第 1 关 · 先给你的选择贴个标签</span>
-              <h3 id="profileTitle"></h3>
-              <p id="profileText"></p>
-              <div class="profile-tags" id="profileTags"></div>
-              <button type="button" class="lab-next" data-lab-next="distribution">去看样本分布</button>
-            </article>
-
-            <article class="lab-panel lab-slide" data-lab-panel="distribution">
+            <article class="lab-panel lab-slide active" data-lab-panel="distribution">
               <div class="lab-panel-head">
-                <span>第 2 关 · 样本分布</span>
-                <strong>找找你在哪</strong>
+                <span>第 1 关 · 描述统计</span>
+                <strong>先看分布</strong>
               </div>
+              <p class="concept-note">描述统计用于整理和呈现数据的基本分布，它能告诉我们“多少人这样选”，但不直接说明因果关系。</p>
               <div class="distribution-list" id="distributionList"></div>
-              <button type="button" class="lab-next" data-lab-next="test">继续做差异检验</button>
+              <button type="button" class="lab-next" data-lab-next="test">进入卡方检验</button>
             </article>
 
             <article class="lab-panel lab-slide" data-lab-panel="test">
               <div class="lab-panel-head">
-                <span>第 3 关 · 差异检验机</span>
-                <strong>p 值扫描</strong>
+                <span>第 2 关 · 卡方检验</span>
+                <strong>差异靠谱吗</strong>
               </div>
+              <p class="concept-note">卡方检验用于判断两个分类变量之间是否存在统计关联。通常 p&lt;0.05 表示观察到的差异较难只用随机波动解释。</p>
               <div class="test-list" id="testList"></div>
-              <button type="button" class="lab-next" data-lab-next="regression">进入回归赛道</button>
+              <button type="button" class="lab-next" data-lab-next="regression">继续看回归分析</button>
             </article>
 
             <article class="lab-panel regression-panel lab-slide" data-lab-panel="regression">
               <div class="lab-panel-head">
-                <span>第 4 关 · 回归赛道</span>
-                <strong>控制变量后</strong>
+                <span>第 3 关 · 回归分析</span>
+                <strong>排除干扰</strong>
               </div>
+              <p class="concept-note">回归分析用于在控制其他变量后，观察某个变量是否仍与结果变量相关。这里的控制变量包括家庭收入和学科类型。</p>
               <div class="regression-list" id="regressionList"></div>
-              <button type="button" class="lab-next" data-lab-next="profile">回到综合回应</button>
+              <button type="button" class="lab-next" data-lab-next="profile">生成综合回应</button>
+            </article>
+
+            <article class="profile-panel lab-slide" data-lab-panel="profile">
+              <span>第 4 关 · 综合回应</span>
+              <h3 id="profileTitle"></h3>
+              <p id="profileText"></p>
+              <div class="profile-tags" id="profileTags"></div>
+              <p class="concept-note">这只是把你的选择放进样本分布中做比较，不是性格测评，也不能推出消费金额或消费能力。</p>
+              <button type="button" class="lab-next" data-lab-next="distribution">再看一遍分布</button>
             </article>
           </div>
         </section>

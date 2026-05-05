@@ -64,29 +64,29 @@ const testFindings = [
   {
     id: 'platform-entry',
     label: '平台进入频率',
-    status: '显著',
-    stat: 'χ²=6.63，p=0.010',
+    status: '差异较稳定',
+    stat: 'χ²=6.63',
     pLabel: 'p=0.010',
-    meter: 10,
-    text: '女生“经常/总是”进入线上消费场景的比例更高，这个差异在样本中比较稳定。',
+    level: 'p<0.05',
+    text: '平台入口与性别存在统计关联，说明进入平台消费场景的频率差异不只是表面百分比不同。',
   },
   {
     id: 'visual-display',
     label: '视觉呈现重视',
-    status: '显著',
-    stat: 'χ²=20.66，p<0.001',
+    status: '差异很稳定',
+    stat: 'χ²=20.66',
     pLabel: 'p<0.001',
-    meter: 2,
-    text: '视觉展示是最清晰的差异环节之一，说明图片、视频和场景化内容值得单独观察。',
+    level: 'p<0.001',
+    text: '视觉展示是最清晰的差异环节之一，图片、视频和场景化内容会影响平台消费判断。',
   },
   {
     id: 'post-purchase-share',
     label: '购后推荐行为',
-    status: '趋势',
-    stat: 'χ²=2.31，p=0.128',
+    status: '证据不足',
+    stat: 'χ²=2.31',
     pLabel: 'p=0.128',
-    meter: 88,
-    text: '比例上能看到方向，但统计上不够稳定，所以更适合说“可能存在趋势”。',
+    level: 'p>0.05',
+    text: '比例上能看到方向，但统计证据不够强，所以只能谨慎地说可能存在趋势。',
   },
 ];
 
@@ -94,38 +94,47 @@ const regressionFindings = [
   {
     id: 'platform-entry',
     label: '平台消费强度',
-    status: '显著正向',
-    coef: '+0.24',
+    status: '仍显著',
+    coef: 'β=0.24',
     p: 'p=0.004',
-    marker: 64,
-    text: '控制家庭收入和学科类型后，性别变量对平台消费强度仍有稳定影响。',
+    strength: 74,
+    text: '控制家庭收入和学科类型后，平台消费强度的差异仍然存在。',
   },
   {
     id: 'visual-display',
     label: '视觉信息敏感度',
-    status: '显著正向',
-    coef: '+0.48',
+    status: '仍显著',
+    coef: 'β=0.48',
     p: 'p<0.001',
-    marker: 78,
-    text: '这是回归中最突出的环节，视觉线索对理解平台消费差异很关键。',
-  },
-  {
-    id: 'post-purchase-share',
-    label: '购后传播反应',
-    status: '趋势',
-    coef: '+0.17',
-    p: 'p=0.086',
-    marker: 56,
-    text: '方向上存在差异，但证据不够强，适合谨慎表达。',
+    strength: 88,
+    text: '视觉信息敏感度是回归中最突出的环节，说明视觉线索不是单纯的页面装饰。',
   },
   {
     id: 'symbolic',
     label: '符号/关系动机',
     status: '不显著',
-    coef: '+0.11',
+    coef: 'β=0.11',
     p: 'p=0.413',
-    marker: 43,
-    text: '不能简单说某一类人更重视身份标识或圈层符号。',
+    strength: 28,
+    text: '证据不足时，不能强行解释为某类人更重视身份标识或圈层符号。',
+  },
+  {
+    id: 'opinion-avoidance',
+    label: '舆论规避反应',
+    status: '接近显著',
+    coef: 'β=0.14',
+    p: 'p=0.065',
+    strength: 52,
+    text: '这个结果接近常用显著性标准，适合当作趋势观察，不能写成确定结论。',
+  },
+  {
+    id: 'post-purchase-share',
+    label: '购后传播反应',
+    status: '趋势',
+    coef: 'β=0.17',
+    p: 'p=0.086',
+    strength: 46,
+    text: '方向上存在差异，但证据不够强，更适合说“可能有关”。',
   },
 ];
 
@@ -244,7 +253,7 @@ function renderResultPage() {
   renderDistributionLab();
   renderTestLab();
   renderRegressionLab();
-  setLabPanel('profile');
+  setLabPanel('distribution');
   runLabAnimation();
 }
 
@@ -322,20 +331,20 @@ function renderTestLab() {
   testList.innerHTML = testFindings.map((item) => {
     const selected = answers[item.id];
     const percent = getSelectedPercent(item.id);
-    const verdict = item.status === '显著' ? '通过 0.05 线' : '越过 0.05 线';
+    const strong = item.level !== 'p>0.05';
     return `
-      <div class="test-ticket ${item.status === '显著' ? 'is-strong' : 'is-trend'}">
-        <div class="ticket-stamp">${item.status}</div>
-        <div class="ticket-main">
+      <div class="checkpoint-card ${strong ? 'is-strong' : 'is-soft'}">
+        <div class="checkpoint-mark">${strong ? '通过' : '待定'}</div>
+        <div class="checkpoint-main">
           <span>${item.label}</span>
-          <strong>${item.stat}</strong>
-          <div class="p-meter">
-            <i style="left: ${item.meter}%"></i>
-            <b style="left: 36%">0.05</b>
+          <strong>${item.status}</strong>
+          <div class="stat-row">
+            <b>${item.stat}</b>
+            <b>${item.pLabel}</b>
+            <b>${item.level}</b>
           </div>
-          <em>${verdict}</em>
           <p>${item.text}</p>
-          <small class="you-chip">你的选择：${selected} · ${percent}%</small>
+          <small class="you-chip">你的选择：${selected} · 同性别样本 ${percent}%</small>
         </div>
       </div>
     `;
@@ -345,21 +354,18 @@ function renderTestLab() {
 function renderRegressionLab() {
   regressionList.innerHTML = regressionFindings.map((item) => {
     const related = answers[item.id];
-    const note = related ? `你的相关选择：${related}` : '这一项提示：没有稳定证据时，不要强行解释。';
+    const note = related ? `你的相关选择：${related}` : '这一项来自扩展变量：没有稳定证据时，不要强行解释。';
     return `
-      <div class="regression-lane">
+      <div class="filter-card">
         <div class="regression-label">
           <span>${item.label}</span>
           <strong>${item.coef} · ${item.status}</strong>
         </div>
-        <div class="coef-track">
-          <i style="left: ${item.marker}%"></i>
-          <b>0</b>
+        <div class="filter-meter" aria-hidden="true">
+          <i style="width: ${item.strength}%"></i>
         </div>
-        <div class="lane-note">
-          <p>${item.text}</p>
-          <small>${item.p}｜${note}</small>
-        </div>
+        <p>${item.text}</p>
+        <small>${item.p}｜${note}</small>
       </div>
     `;
   }).join('');

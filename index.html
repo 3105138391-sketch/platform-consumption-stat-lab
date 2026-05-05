@@ -93,6 +93,7 @@
                 <strong>差异靠谱吗</strong>
               </div>
               <p class="concept-note">卡方检验用于判断两个分类变量之间是否存在统计关联。通常 p&lt;0.05 表示观察到的差异较难只用随机波动解释。</p>
+              <div class="stats-visual chi-visual" id="chiChart" aria-label="卡方检验 p 值图"></div>
               <div class="test-list" id="testList"></div>
               <button type="button" class="lab-next" data-lab-next="regression">继续看回归分析</button>
             </article>
@@ -102,7 +103,8 @@
                 <span>第 3 关 · 回归分析</span>
                 <strong>排除干扰</strong>
               </div>
-              <p class="concept-note">回归分析用于在控制其他变量后，观察某个变量是否仍与结果变量相关。这里的控制变量包括家庭收入和学科类型。</p>
+              <p class="concept-note">回归分析可以理解成“把其他影响先放到一边”。这里先控制家庭收入和学科类型，再看平台消费相关变量是否还和性别差异有关。</p>
+              <div class="stats-visual regression-visual" id="regressionChart" aria-label="回归分析系数图"></div>
               <div class="regression-list" id="regressionList"></div>
               <button type="button" class="lab-next" data-lab-next="profile">生成综合回应</button>
             </article>

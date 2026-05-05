@@ -67,6 +67,8 @@ const testFindings = [
     status: '差异较稳定',
     stat: 'χ²=6.63',
     pLabel: 'p=0.010',
+    pValue: 0.010,
+    chiValue: 6.63,
     level: 'p<0.05',
     text: '平台入口与性别存在统计关联，说明进入平台消费场景的频率差异不只是表面百分比不同。',
   },
@@ -76,6 +78,8 @@ const testFindings = [
     status: '差异很稳定',
     stat: 'χ²=20.66',
     pLabel: 'p<0.001',
+    pValue: 0.001,
+    chiValue: 20.66,
     level: 'p<0.001',
     text: '视觉展示是最清晰的差异环节之一，图片、视频和场景化内容会影响平台消费判断。',
   },
@@ -85,6 +89,8 @@ const testFindings = [
     status: '证据不足',
     stat: 'χ²=2.31',
     pLabel: 'p=0.128',
+    pValue: 0.128,
+    chiValue: 2.31,
     level: 'p>0.05',
     text: '比例上能看到方向，但统计证据不够强，所以只能谨慎地说可能存在趋势。',
   },
@@ -96,45 +102,60 @@ const regressionFindings = [
     label: '平台消费强度',
     status: '仍显著',
     coef: 'β=0.24',
+    betaValue: 0.24,
     p: 'p=0.004',
     strength: 74,
-    text: '控制家庭收入和学科类型后，平台消费强度的差异仍然存在。',
+    focus: '看一个人是不是更容易进入线上平台消费场景，比如刷到推荐后点进淘宝、京东或拼多多。',
+    reading: 'β 是正数，p 小于 0.05，说明控制家庭收入和学科类型后，这个差异仍比较稳定。',
+    text: '可以说：平台入口频率是比较值得关注的差异点。',
   },
   {
     id: 'visual-display',
     label: '视觉信息敏感度',
     status: '仍显著',
     coef: 'β=0.48',
+    betaValue: 0.48,
     p: 'p<0.001',
     strength: 88,
-    text: '视觉信息敏感度是回归中最突出的环节，说明视觉线索不是单纯的页面装饰。',
+    focus: '看图片、视频、实拍图、穿搭图、使用场景这些视觉信息会不会影响判断。',
+    reading: 'β 更大，p 也更小，说明它在模型里是最清晰的一项。',
+    text: '可以说：视觉展示不只是装饰，它确实和平台消费判断有关。',
   },
   {
     id: 'symbolic',
     label: '符号/关系动机',
     status: '不显著',
     coef: 'β=0.11',
+    betaValue: 0.11,
     p: 'p=0.413',
     strength: 28,
-    text: '证据不足时，不能强行解释为某类人更重视身份标识或圈层符号。',
+    focus: '看消费是否和身份标识、圈层关系、社交符号有关。',
+    reading: 'p 明显大于 0.05，说明现有数据不足以支持稳定差异。',
+    text: '可以说：这里不能强行解释为某一类人更重视身份或圈层。',
   },
   {
     id: 'opinion-avoidance',
     label: '舆论规避反应',
     status: '接近显著',
     coef: 'β=0.14',
+    betaValue: 0.14,
     p: 'p=0.065',
     strength: 52,
-    text: '这个结果接近常用显著性标准，适合当作趋势观察，不能写成确定结论。',
+    focus: '看购买或推荐时，会不会考虑评价、风评、避雷信息带来的压力。',
+    reading: 'p 接近 0.05，但还没有越过常用标准，所以只能当作趋势。',
+    text: '可以说：这里可能有方向，但还不能写成确定结论。',
   },
   {
     id: 'post-purchase-share',
     label: '购后传播反应',
     status: '趋势',
     coef: 'β=0.17',
+    betaValue: 0.17,
     p: 'p=0.086',
     strength: 46,
-    text: '方向上存在差异，但证据不够强，更适合说“可能有关”。',
+    focus: '看买到会员、课程、软件等之后，是否愿意推荐、分享或提醒别人。',
+    reading: 'β 是正数，但 p 仍大于 0.05，说明方向存在，证据不够强。',
+    text: '可以说：购后传播可以作为观察线索，但不要下强结论。',
   },
 ];
 
@@ -167,6 +188,8 @@ const profileTags = document.querySelector('#profileTags');
 const distributionList = document.querySelector('#distributionList');
 const testList = document.querySelector('#testList');
 const regressionList = document.querySelector('#regressionList');
+const chiChart = document.querySelector('#chiChart');
+const regressionChart = document.querySelector('#regressionChart');
 const labNavButtons = document.querySelectorAll('[data-lab-target]');
 const labSlides = document.querySelectorAll('[data-lab-panel]');
 const labNextButtons = document.querySelectorAll('[data-lab-next]');
@@ -328,6 +351,7 @@ function renderDistributionLab() {
 }
 
 function renderTestLab() {
+  renderChiChart();
   testList.innerHTML = testFindings.map((item) => {
     const selected = answers[item.id];
     const percent = getSelectedPercent(item.id);
@@ -352,6 +376,7 @@ function renderTestLab() {
 }
 
 function renderRegressionLab() {
+  renderRegressionChart();
   regressionList.innerHTML = regressionFindings.map((item) => {
     const related = answers[item.id];
     const note = related ? `你的相关选择：${related}` : '这一项来自扩展变量：没有稳定证据时，不要强行解释。';
@@ -364,11 +389,55 @@ function renderRegressionLab() {
         <div class="filter-meter" aria-hidden="true">
           <i style="width: ${item.strength}%"></i>
         </div>
-        <p>${item.text}</p>
+        <div class="regression-explain">
+          <p><b>它在看什么</b>${item.focus}</p>
+          <p><b>数字怎么读</b>${item.reading}</p>
+          <p><b>可以怎么说</b>${item.text}</p>
+        </div>
         <small>${item.p}｜${note}</small>
       </div>
     `;
   }).join('');
+}
+
+function renderChiChart() {
+  chiChart.innerHTML = `
+    <div class="visual-head">
+      <span>p 值闸门图</span>
+      <strong>0.05 左侧 = 差异更稳定</strong>
+    </div>
+    <div class="p-gate">
+      <div class="gate-zone pass">较稳定</div>
+      <div class="gate-zone wait">需谨慎</div>
+      <i class="gate-line" style="left: 38%"></i>
+      <b class="gate-label" style="left: 38%">0.05</b>
+      ${testFindings.map((item, index) => {
+        const left = Math.min(92, Math.max(8, item.pValue / 0.14 * 100));
+        return `<button type="button" class="p-dot ${item.pValue < 0.05 ? 'is-pass' : 'is-wait'}" style="left: ${left}%; top: ${30 + index * 24}%" title="${item.label} ${item.pLabel}">
+          <span>${index + 1}</span>
+          <em>${item.label}<br>${item.pLabel}</em>
+        </button>`;
+      }).join('')}
+    </div>
+  `;
+}
+
+function renderRegressionChart() {
+  regressionChart.innerHTML = `
+    <div class="visual-head">
+      <span>β 系数条形图</span>
+      <strong>条越长，关联越明显</strong>
+    </div>
+    <div class="beta-bars">
+      ${regressionFindings.map((item) => `
+        <div class="beta-row ${item.p.includes('p=0.413') ? 'is-muted' : ''}">
+          <span>${item.label}</span>
+          <div class="beta-track"><i style="width: ${Math.min(100, item.betaValue / 0.5 * 100)}%"></i></div>
+          <b>${item.coef}</b>
+        </div>
+      `).join('')}
+    </div>
+  `;
 }
 
 function runLabAnimation() {
